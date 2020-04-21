@@ -1,3 +1,4 @@
+
 package application;
 
 import java.io.File;
@@ -572,7 +573,6 @@ public class MainGUI extends Application {
 		window.show();
 	}
 	
-<<<<<<< HEAD
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void displayData(GridPane grid, Scene scene) {
 		//Common styles for the buttons and labels
@@ -589,12 +589,6 @@ public class MainGUI extends Application {
 		//Places the label at 5th colum and 1st row
 		GridPane.setConstraints(label, 5, 1);
 		
-=======
-		public void displayData() {
-		//creates the grid pane
-		BorderPane displayBP= new BorderPane();
-		displayBP.setStyle("-fx-background-color: #F0F8FF");
->>>>>>> 0ae60ec944d6e99421b50a2911ff34ed76ad7451
 		//creates all of the different tree items and makes them children of year
 		TreeView weights = new TreeView();
 		TreeItem year= new TreeItem("2019");
@@ -636,15 +630,11 @@ public class MainGUI extends Application {
 		dec.getChildren().add(milkWeights(12));
 		
 		weights.setRoot(year);
-<<<<<<< HEAD
 		GridPane.setConstraints(weights, 5, 2);
-=======
->>>>>>> 0ae60ec944d6e99421b50a2911ff34ed76ad7451
 		
 		Button returnHome = new Button("Return to Main Menu");
 		returnHome.setMaxWidth(300);
 		returnHome.setMaxHeight(200);
-<<<<<<< HEAD
 		returnHome.setStyle(styles);
 		returnHome.setOnAction(e -> window.setScene(main));
 		GridPane.setConstraints(returnHome, 5, 3);
@@ -656,22 +646,6 @@ public class MainGUI extends Application {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-=======
-		returnHome.setOnAction(e -> window.setScene(main));
-		
-		displayBP.setCenter(weights);
-		displayBP.setBottom(returnHome);
-		displayBP.setAlignment(returnHome, Pos.CENTER);
-		//displayBP.setBottom();
-		//sets a new scene for the display page
-		Scene displayScene = new Scene(displayBP, 600, 500);
-		
-		
-		window.setScene(displayScene);
-		window.show();
-	}
-	
->>>>>>> 0ae60ec944d6e99421b50a2911ff34ed76ad7451
 	public TreeItem milkWeights(int month) {
 		
 		TreeItem jan = new TreeItem("2019-1-9,Farm 1,8789\r\n" + 
