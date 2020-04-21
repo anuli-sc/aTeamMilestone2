@@ -507,6 +507,161 @@ public class MainGUI extends Application {
 		window.show();
 	}
 	
+		public void displayData() {
+		//creates the grid pane
+		BorderPane displayBP= new BorderPane();
+		displayBP.setStyle("-fx-background-color: #F0F8FF");
+		//creates all of the different tree items and makes them children of year
+		TreeView weights = new TreeView();
+		TreeItem year= new TreeItem("2019");
+		TreeItem jan= new TreeItem("January");
+		TreeItem feb= new TreeItem("February");
+		TreeItem mar= new TreeItem("March");
+		TreeItem apr= new TreeItem("April");
+		TreeItem may= new TreeItem("May");
+		TreeItem jun= new TreeItem("June");
+		TreeItem jul= new TreeItem("July");
+		TreeItem aug= new TreeItem("August");
+		TreeItem sep= new TreeItem("September");
+		TreeItem oct= new TreeItem("Octover");
+		TreeItem nov= new TreeItem("November");
+		TreeItem dec= new TreeItem("December");
+		year.getChildren().add(jan);
+		year.getChildren().add(feb);
+		year.getChildren().add(mar);
+		year.getChildren().add(apr);
+		year.getChildren().add(may);
+		year.getChildren().add(jun);
+		year.getChildren().add(jul);
+		year.getChildren().add(aug);
+		year.getChildren().add(sep);
+		year.getChildren().add(oct);
+		year.getChildren().add(nov);
+		year.getChildren().add(dec);
+		jan.getChildren().add(milkWeights(1));
+		feb.getChildren().add(milkWeights(2));
+		mar.getChildren().add(milkWeights(3));
+		apr.getChildren().add(milkWeights(4));
+		may.getChildren().add(milkWeights(5));
+		jun.getChildren().add(milkWeights(6));
+		jul.getChildren().add(milkWeights(7));
+		aug.getChildren().add(milkWeights(8));
+		sep.getChildren().add(milkWeights(9));
+		oct.getChildren().add(milkWeights(10));
+		nov.getChildren().add(milkWeights(11));
+		dec.getChildren().add(milkWeights(12));
+		
+		weights.setRoot(year);
+		
+		Button returnHome = new Button("Return to Main Menu");
+		returnHome.setMaxWidth(300);
+		returnHome.setMaxHeight(200);
+		returnHome.setOnAction(e -> window.setScene(main));
+		
+		displayBP.setCenter(weights);
+		displayBP.setBottom(returnHome);
+		displayBP.setAlignment(returnHome, Pos.CENTER);
+		//displayBP.setBottom();
+		//sets a new scene for the display page
+		Scene displayScene = new Scene(displayBP, 600, 500);
+		
+		
+		window.setScene(displayScene);
+		window.show();
+	}
+	
+	public TreeItem milkWeights(int month) {
+		
+		TreeItem jan = new TreeItem("2019-1-9,Farm 1,8789\r\n" + 
+				"2019-1-9,Farm 2,3635\r\n" + 
+				"2019-1-10,Farm 0,6796\r\n" + 
+				"2019-1-10,Farm 1,8775\r\n" + 
+				"2019-1-10,Farm 2,3377\r\n" + 
+				"2019-1-11,Farm 0,6614");
+		TreeItem feb = new TreeItem("2019-2-13,Farm 1,8809\r\n" + 
+				"2019-2-13,Farm 2,3450\r\n" + 
+				"2019-2-14,Farm 0,6818\r\n" + 
+				"2019-2-14,Farm 1,8697\r\n" + 
+				"2019-2-14,Farm 2,3560\r\n" + 
+				"2019-2-15,Farm 0,6801");
+		TreeItem mar = new TreeItem("2019-3-6,Farm 2,3550\r\n" + 
+				"2019-3-7,Farm 0,6780\r\n" + 
+				"2019-3-7,Farm 1,8602\r\n" + 
+				"2019-3-7,Farm 2,3522\r\n" + 
+				"2019-3-8,Farm 0,6894\r\n" + 
+				"2019-3-8,Farm 1,8837");
+		TreeItem apr = new TreeItem("2019-4-8,Farm 0,6617\r\n" + 
+				"2019-4-8,Farm 1,8672\r\n" + 
+				"2019-4-8,Farm 2,3549\r\n" + 
+				"2019-4-9,Farm 0,6763\r\n" + 
+				"2019-4-9,Farm 1,8797\r\n" + 
+				"2019-4-9,Farm 2,3597");
+		TreeItem may = new TreeItem("2019-5-3,Farm 0,6737\r\n" + 
+				"2019-5-3,Farm 1,8825\r\n" + 
+				"2019-5-3,Farm 2,3468\r\n" + 
+				"2019-5-4,Farm 0,6746\r\n" + 
+				"2019-5-4,Farm 1,8604\r\n" + 
+				"2019-5-4,Farm 2,3475");
+		TreeItem jun = new TreeItem("2019-6-29,Farm 0,6893\r\n" + 
+				"2019-6-29,Farm 1,8764\r\n" + 
+				"2019-6-29,Farm 2,3479\r\n" + 
+				"2019-6-30,Farm 0,6694\r\n" + 
+				"2019-6-30,Farm 1,8735\r\n" + 
+				"2019-6-30,Farm 2,3561");
+		TreeItem jul = new TreeItem("2019-7-3,Farm 2,3536\r\n" + 
+				"2019-7-4,Farm 0,6719\r\n" + 
+				"2019-7-4,Farm 1,8828\r\n" + 
+				"2019-7-4,Farm 2,3480\r\n" + 
+				"2019-7-5,Farm 0,6815\r\n" + 
+				"2019-7-5,Farm 1,8629");
+		TreeItem aug = new TreeItem("2019-8-26,Farm 2,3427\r\n" + 
+				"2019-8-27,Farm 0,6722\r\n" + 
+				"2019-8-27,Farm 1,8681\r\n" + 
+				"2019-8-27,Farm 2,3486\r\n" + 
+				"2019-8-28,Farm 0,6780\r\n" + 
+				"2019-8-28,Farm 1,8778");
+		TreeItem sep = new TreeItem("2019-9-5,Farm 0,6767\r\n" + 
+				"2019-9-5,Farm 1,8726\r\n" + 
+				"2019-9-5,Farm 2,3614\r\n" + 
+				"2019-9-6,Farm 0,6846\r\n" + 
+				"2019-9-6,Farm 1,8682\r\n" + 
+				"2019-9-6,Farm 2,3589");
+		TreeItem oct = new TreeItem("2019-10-16,Farm 2,3560\r\n" + 
+				"2019-10-17,Farm 0,6647\r\n" + 
+				"2019-10-17,Farm 1,8787\r\n" + 
+				"2019-10-17,Farm 2,3477\r\n" + 
+				"2019-10-18,Farm 0,6866\r\n" + 
+				"2019-10-18,Farm 1,8776");
+		TreeItem nov = new TreeItem("2019-11-16,Farm 2,3505\r\n" + 
+				"2019-11-17,Farm 0,6630\r\n" + 
+				"2019-11-17,Farm 1,8796\r\n" + 
+				"2019-11-17,Farm 2,3394\r\n" + 
+				"2019-11-18,Farm 0,6770\r\n" + 
+				"2019-11-18,Farm 1,8684");
+		TreeItem dec = new TreeItem("2019-12-23,Farm 2,3400\r\n" + 
+				"2019-12-24,Farm 0,6797\r\n" + 
+				"2019-12-24,Farm 1,8698\r\n" + 
+				"2019-12-24,Farm 2,3447\r\n" + 
+				"2019-12-25,Farm 0,6755\r\n" + 
+				"2019-12-25,Farm 1,8720");
+		
+		
+		if(month == 1) {return jan;}
+		if(month == 2) {return feb;}
+		if(month == 3) {return mar;}
+		if(month == 4) {return apr;}
+		if(month == 5) {return may;}
+		if(month == 6) {return jun;}
+		if(month == 7) {return jul;}
+		if(month == 8) {return aug;}
+		if(month == 9) {return sep;}
+		if(month == 10) {return oct;}
+		if(month == 11) {return nov;}
+		if(month == 12) {return dec;}
+		
+		return null;
+	}
+	
 	public static void main(String[] args) {
 		launch(args);
 
