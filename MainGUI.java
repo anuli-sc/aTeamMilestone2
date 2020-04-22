@@ -120,8 +120,8 @@ public class MainGUI extends Application {
 		
 		GridPane.setConstraints(displayData, 6, 4);
 		
-		//When display button is pressed, the displayData method is called 
-		displayData.setOnAction(e -> displayData(displayGrid, displayScene));
+		//When display button is pressed, the displayOptions method is called 
+		displayData.setOnAction(e -> displayOptions(displayGrid, displayScene));
 		
 		//Adds all the buttons and labels to the grid
 		grid.getChildren().addAll(label, uploadData, editData, displayData);
@@ -825,6 +825,253 @@ public class MainGUI extends Application {
 				returnHome, label, labelFarm, labelYear, labelMonth, labelDay, labelWeight);
 		window.setScene(scene);
 		window.show();
+	}
+
+	/**
+
+	 * 
+
+	 * @param grid
+
+	 * @param scene
+
+	 */
+
+	private void displayOptions(GridPane grid, Scene scene) {
+
+		GridPane farmReportGrid = new GridPane();
+
+		farmReportGrid.setPadding(new Insets(80, 40, 80, 40));
+
+		farmReportGrid.setVgap(10);
+
+		farmReportGrid.setHgap(30);
+
+		farmReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		
+
+		Scene farmReportScene = new Scene(farmReportGrid, 600, 500);
+
+		
+
+		GridPane anualReportGrid = new GridPane();
+
+		anualReportGrid.setPadding(new Insets(80, 40, 80, 40));
+
+		anualReportGrid.setVgap(10);
+
+		anualReportGrid.setHgap(30);
+
+		anualReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		
+
+		Scene anualReportScene = new Scene(anualReportGrid, 600, 500);
+
+		
+
+		GridPane monthlyReportGrid = new GridPane();
+
+		monthlyReportGrid.setPadding(new Insets(80, 40, 80, 40));
+
+		monthlyReportGrid.setVgap(10);
+
+		monthlyReportGrid.setHgap(30);
+
+		monthlyReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		
+
+		Scene monthlyReportScene = new Scene(monthlyReportGrid, 600, 500);
+		
+		
+		GridPane dateRangeReportGrid = new GridPane();
+
+		dateRangeReportGrid.setPadding(new Insets(80, 40, 80, 40));
+
+		dateRangeReportGrid.setVgap(10);
+
+		dateRangeReportGrid.setHgap(30);
+
+		dateRangeReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		
+
+		Scene dateRangeReportScene = new Scene(dateRangeReportGrid, 600, 500);
+
+		
+
+		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;" +
+
+				"-fx-font: bold italic 15pt \"Arial\";";
+
+		
+
+		String labelStyle = "-fx-font: bold italic 15pt \"Arial\";";
+
+		
+
+		Label label = new Label("Choose a report type:");
+
+		label.setMaxSize(500, 200);
+
+		label.setStyle(labelStyle);
+
+		GridPane.setConstraints(label, 3, 1);
+
+		
+
+		Button farmReport = new Button("Farm Report");
+
+		farmReport.setStyle(styles);
+
+		farmReport.setEffect(new DropShadow());
+
+		farmReport.setMaxWidth(400);
+
+		farmReport.setMaxHeight(200);
+
+		GridPane.setConstraints(farmReport, 3, 2);
+
+		
+
+		Button anualReport = new Button("Anual Report");
+
+		anualReport.setStyle(styles);
+
+		anualReport.setEffect(new DropShadow());
+
+		anualReport.setMaxWidth(400);
+
+		anualReport.setMaxHeight(200);
+
+		GridPane.setConstraints(anualReport, 3, 3);
+
+		
+
+		Button monthlyReport = new Button("Monthly Report");
+
+		monthlyReport.setStyle(styles);
+
+		monthlyReport.setEffect(new DropShadow());
+
+		monthlyReport.setMaxWidth(400);
+
+		monthlyReport.setMaxHeight(200);
+
+		GridPane.setConstraints(monthlyReport, 3, 4);
+		
+		
+		Button dateRangeReport = new Button("Date Range Report");
+
+		dateRangeReport.setStyle(styles);
+
+		dateRangeReport.setEffect(new DropShadow());
+
+		dateRangeReport.setMaxWidth(400);
+
+		dateRangeReport.setMaxHeight(200);
+
+		GridPane.setConstraints(dateRangeReport, 3, 4);
+
+		
+
+		Button returnHome = new Button("Return to Main Menu");
+
+		returnHome.setStyle(styles);
+
+		returnHome.setEffect(new DropShadow());
+
+		returnHome.setMaxWidth(400);
+
+		returnHome.setMaxHeight(200);
+
+		GridPane.setConstraints(returnHome, 3, 5);
+
+		returnHome.setOnAction(e -> window.setScene(main));
+
+		
+
+		grid.getChildren().addAll(label, farmReport, anualReport, monthlyReport, dateRangeReport, returnHome);
+
+		window.setScene(scene);
+
+		window.show();
+
+		
+
+		farmReport.setOnAction(e -> getFarmReport());
+
+		anualReport.setOnAction(e -> getAnualReport());
+
+		monthlyReport.setOnAction(e -> getMonthlyReport());
+		
+		dateRangeReport.setOnAction(e -> getDateRangeReport());
+	}
+
+	public void getFarmReport() {
+
+		//Sets a new grid for a potential new window when Farm Report is clicked
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(80, 40, 80, 40));
+		grid.setVgap(25);
+		grid.setHgap(30);
+		grid.setStyle("-fx-background-color: #F0F8FF");
+		
+		//Sets a new scene if the Farm Report button is pushed
+		Scene scene = new Scene(displayGrid, 600, 500);
+
+		displayData(grid, scene);
+
+	}
+	
+	public void getAnualReport() {
+
+		//Sets a new grid for a potential new window when Anual Report is clicked
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(80, 40, 80, 40));
+		grid.setVgap(25);
+		grid.setHgap(30);
+		grid.setStyle("-fx-background-color: #F0F8FF");
+		
+		//Sets a new scene if the Anual Report button is pushed
+		Scene scene = new Scene(displayGrid, 600, 500);
+
+		displayData(grid, scene);
+
+	}
+	
+	public void getMonthlyReport() {
+
+		//Sets a new grid for a potential new window when Monthly Report is clicked
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(80, 40, 80, 40));
+		grid.setVgap(25);
+		grid.setHgap(30);
+		grid.setStyle("-fx-background-color: #F0F8FF");
+		
+		//Sets a new scene if the Montly Report button is pushed
+		Scene scene = new Scene(displayGrid, 600, 500);
+
+		displayData(grid, scene);
+
+	}
+	
+	public void getDateRangeReport() {
+
+		//Sets a new grid for a potential new window when Date Range Report is clicked
+		GridPane grid = new GridPane();
+		grid.setPadding(new Insets(80, 40, 80, 40));
+		grid.setVgap(25);
+		grid.setHgap(30);
+		grid.setStyle("-fx-background-color: #F0F8FF");
+		
+		//Sets a new scene if the Date Range Report button is pushed
+		Scene scene = new Scene(displayGrid, 600, 500);
+
+		displayData(grid, scene);
+
 	}
 	
 	/**
