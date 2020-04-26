@@ -16,6 +16,11 @@ public class Farm {
 		milkWeights = new Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>>();
 	}
 	
+	/** 
+     * getter method for milk weights
+     * 
+     * @return pointer to milk weights hashtable
+     */
 	public Hashtable<Integer, Hashtable<Integer, Hashtable<Integer, Integer>>> getMilkWeights(){
 		return this.milkWeights;
 	}
@@ -23,6 +28,7 @@ public class Farm {
 	/** 
      * Add key, value pair to hashtable
      *     key=date  value=weight
+     * If duplicate entry, add weight to the previously stored weight
      * 
      * @param year contribution to date
      * @param month contribution to date
@@ -40,6 +46,7 @@ public class Farm {
 		if(m.get(day) == null) {
 			m.put(day, weight);
 		}
+		// if entry already exists for this date, add both weights
 		else m.replace(day, m.get(day) + weight);
 		
 	}
