@@ -111,14 +111,11 @@ public class MilkWeightOrganizer {
 	 */
 	public Object[][] getAnnualReport(int year) {
 		
-		int numElements = 0;
 		ArrayList<Object[]> elements = new ArrayList<Object[]>();
 		
 		for(String farmID : farms.keySet()) {
 			Hashtable<Integer, Hashtable<Integer, Integer>> thisFarmYear = farms.get(farmID).getMilkWeights().get(year);
 			if(thisFarmYear != null) {
-				numElements++;
-				
 				int farmYearTotal = 0;
 				for(Integer m : thisFarmYear.keySet()) {
 					Hashtable<Integer, Integer> thisMonth = thisFarmYear.get(m);
@@ -143,7 +140,7 @@ public class MilkWeightOrganizer {
 		// index 0 = farm id
 		// index 1 = total weight for the year for that farm
 		// index 2 = percent of total weight for the year that came from that farm
-		Object[][] results = new Object[numElements][3];
+		Object[][] results = new Object[elements.size()][3];
 		
 		for(Object[] element : elements) {
 			element[2] = (float) ( (int) element[1] / yearTotal);
@@ -159,12 +156,46 @@ public class MilkWeightOrganizer {
 	 * 
 	 * @param year to search for
 	 * @param month to search for
-	 * @return 
+	 * @return 2D array containing -> 1) farm ID 2) monthly total for farm 3) percent contributed to monthly total for all farms
 	 */
-	public int[][] getMonthlyReport(int year, String month) {
-		int[][] results = new int[farms.size()][2];
+	public Object[][] getMonthlyReport(int year, int month) {
 		
+		ArrayList<Object[]> elements = new ArrayList<Object[]>();
 		
+		for(String farmID : farms.keySet()) {
+			Hashtable<Integer, Hashtable<Integer, Integer>> thisFarmYear = farms.get(farmID).getMilkWeights().get(year);
+			if(thisFarmYear != null) {
+				
+				Hashtable<Integer, Integer> thisFarmMonth = thisFarmYear.get(month);
+				if(thisFarmMonth != null) {
+					
+					int farmMonthTotal = 0;
+					for(Integer d : thisFarmMonth.keySet()) {
+						farmMonthTotal = farmMonthTotal + thisFarmMonth.get(d);
+					}
+					Object[] element = new Object[3];
+					element[0] = farmID;
+					element[1] = farmMonthTotal;
+					
+					elements.add(element);
+				}
+			}
+		}
+		
+		int monthTotal = 0;
+		for(Object[] element : elements) {
+			monthTotal = monthTotal + (int) element[1];
+		}
+		
+		// index 0 = farm id
+		// index 1 = total weight for the month for that farm
+		// index 2 = percent of total weight for the month that came from that farm
+		Object[][] results = new Object[elements.size()][3];
+		
+		for(Object[] element : elements) {
+			element[2] = (float) ( (int) element[1] / monthTotal);
+			results[elements.indexOf(element)] = element;
+		}
 		
 		return results;
 	}
@@ -181,9 +212,9 @@ public class MilkWeightOrganizer {
 	 * @param endDay day of end date
 	 * @return 
 	 */
-	public int[][] getDateRangeReport(int startYear, String startMonth, int startDay, 
-			int endYear, String endMonth, int endDay) {
-		int[][] results = new int[farms.size()][2];
+	public Object[][] getDateRangeReport(int startYear, int startMonth, int startDay, 
+			int endYear, int endMonth, int endDay) {
+		Object[][] results = new Object[farms.size()][3];
 		
 		
 		
