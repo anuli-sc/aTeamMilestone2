@@ -3,6 +3,7 @@ package application;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,18 +16,6 @@ public class UploadedFile {
 	private String fileName;
 	private boolean uploaded = false;
 	private ArrayList<Farm> farms;
-	private ArrayList<Farm> january = new ArrayList<Farm>();
-	private ArrayList<Farm> february = new ArrayList<Farm>();
-	private ArrayList<Farm> march = new ArrayList<Farm>();
-	private ArrayList<Farm> april = new ArrayList<Farm>();
-	private ArrayList<Farm> may = new ArrayList<Farm>();
-	private ArrayList<Farm> june = new ArrayList<Farm>();
-	private ArrayList<Farm> july = new ArrayList<Farm>();
-	private ArrayList<Farm> august = new ArrayList<Farm>();
-	private ArrayList<Farm> september = new ArrayList<Farm>();
-	private ArrayList<Farm> october = new ArrayList<Farm>();
-	private ArrayList<Farm> november = new ArrayList<Farm>();
-	private ArrayList<Farm> december = new ArrayList<Farm>();
 
 	public UploadedFile(String file) throws FileNotFoundException {
 		this.fileName = file;
@@ -95,6 +84,19 @@ public class UploadedFile {
 		double octTotalWeight = 0;
 		double novTotalWeight = 0;
 		double decTotalWeight = 0;
+		
+		ArrayList<Farm> january = new ArrayList<Farm>();
+		ArrayList<Farm> february = new ArrayList<Farm>();
+		ArrayList<Farm> march = new ArrayList<Farm>();
+		ArrayList<Farm> april = new ArrayList<Farm>();
+		ArrayList<Farm> may = new ArrayList<Farm>();
+		ArrayList<Farm> june = new ArrayList<Farm>();
+		ArrayList<Farm> july = new ArrayList<Farm>();
+		ArrayList<Farm> august = new ArrayList<Farm>();
+		ArrayList<Farm> september = new ArrayList<Farm>();
+		ArrayList<Farm> october = new ArrayList<Farm>();
+		ArrayList<Farm> november = new ArrayList<Farm>();
+		ArrayList<Farm> december = new ArrayList<Farm>();
 		
 		int farm = Integer.parseInt(farmID);
 		int finalYear = Integer.parseInt(farmYear);
@@ -205,9 +207,9 @@ public class UploadedFile {
 		if (writeToFile == true) {
 			File file = new File("farmReport.txt");
 			PrintWriter printWriter;
+			
 			try {
 				printWriter = new PrintWriter(file);
-
 				printReport(january, 1, printWriter, janTotalWeight, janPercentWeight);
 				printReport(february, 2, printWriter, febTotalWeight, febPercentWeight);
 				printReport(march, 3, printWriter, marTotalWeight,marPercentWeight);
@@ -262,7 +264,7 @@ public class UploadedFile {
 	}
 	
 	private void printReport(ArrayList<Farm> month, int monthNum, 
-			PrintWriter printWriter, double totalWeight, double percentTotalWeight) {
+		PrintWriter printWriter, double totalWeight, double percentTotalWeight) {
 
 		if (monthNum == 1) {
 			printWriter.println("January: ");
