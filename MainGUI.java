@@ -19,9 +19,6 @@ import javafx.stage.Stage;
 public class MainGUI extends Application {
 	private Stage window; // The main window
 	private Scene main; // The main menu scene
-	private boolean buttonPressedAdd = false; // Checks if the add data was pressed
-	private boolean buttonPressedRemove = false; // Checks if the remove data was pressed
-	private boolean uploaded = false; // Checks if the upload button was pressed
 	private UploadedFile newFile;
 
 	@Override
@@ -121,19 +118,11 @@ public class MainGUI extends Application {
 		displayData.setMaxSize(500, 200);
 
 		GridPane.setConstraints(displayData, 6, 4);
-<<<<<<< HEAD
 
 		// When display button is pressed, the displayData method is called
 		displayData.setOnAction(e -> displayData(displayGrid, displayScene));
 
 		// Adds all the buttons and labels to the grid
-=======
-		
-		//When display button is pressed, the displayOptions method is called 
-		displayData.setOnAction(e -> displayOptions(displayGrid, displayScene));
-		
-		//Adds all the buttons and labels to the grid
->>>>>>> 6d737a8cb0922fc6109fbc356faa46e70c35713a
 		grid.getChildren().addAll(label, uploadData, editData, displayData);
 
 		// Sets the background of the grid to light blue
@@ -460,27 +449,21 @@ public class MainGUI extends Application {
 		// When the button is pressed
 		addEntry.setOnAction(e -> {
 
-			// Check the farmID, year, month, day, and weight the user entered
-			if (farmID.getText().equals("00700") && year.getText().equals("2019") && month.getText().equals("March")
-					&& day.getText().equals("15") && weight.getText().equals("5.5")) {
+			newFile.addFarm(farmID.getText(), year.getText(), month.getText(), day.getText(), weight.getText());
+			
+			// Create a new add grid to show confirmation
+			GridPane newAddGrid = new GridPane();
+			newAddGrid.setPadding(new Insets(80, 40, 80, 40));
+			newAddGrid.setVgap(10);
+			newAddGrid.setHgap(30);
+			newAddGrid.setStyle("-fx-background-color: #F0F8FF");
 
-				// If it is the specified input set buttonPressedAdd to true
-				this.buttonPressedAdd = true;
+			// Create a new confirmation scene
+			Scene confirmationScene = new Scene(newAddGrid, 600, 500);
 
-				// Create a new add grid to show confirmation
-				GridPane newAddGrid = new GridPane();
-				newAddGrid.setPadding(new Insets(80, 40, 80, 40));
-				newAddGrid.setVgap(10);
-				newAddGrid.setHgap(30);
-				newAddGrid.setStyle("-fx-background-color: #F0F8FF");
-
-				// Create a new confirmation scene
-				Scene confirmationScene = new Scene(newAddGrid, 600, 500);
-
-				// Call the confirmation method with newAddGrid and confirmation scene
-				// with the add action
-				confirmation(newAddGrid, confirmationScene, styles, "add");
-			}
+			// Call the confirmation method with newAddGrid and confirmation scene
+			// with the add action
+			confirmation(newAddGrid, confirmationScene, styles, "add");
 
 		});
 
@@ -562,6 +545,24 @@ public class MainGUI extends Application {
 			grid.getChildren().add(label);
 		}
 
+		if (action.equals("AnnualReport")) {
+			// Show the specific message for added file
+			Label label = new Label("Your annual report is ready, find annualReport.txt");
+			label.setMaxSize(500, 200);
+			label.setStyle(labelStyle);
+			GridPane.setConstraints(label, 4, 1);
+			grid.getChildren().add(label);
+		}
+
+		if (action.equals("MonthlyReport")) {
+			// Show the specific message for added file
+			Label label = new Label("Your monthly report is ready, find monthlyReport.txt");
+			label.setMaxSize(500, 200);
+			label.setStyle(labelStyle);
+			GridPane.setConstraints(label, 4, 1);
+			grid.getChildren().add(label);
+		}
+
 		// Button used to return back to the main menu
 		Button returnHome = new Button("Return to Main Menu");
 		returnHome.setStyle(styles);
@@ -575,47 +576,6 @@ public class MainGUI extends Application {
 
 		window.setScene(scene);
 		window.show();
-	}
-
-	/**
-	 * Private helper method to see if the added entry was valid
-	 * 
-	 * @return true if valid and false if not
-	 */
-	private boolean addEntry() {
-
-		// Checks if the buttonPressedAdd was pressed
-		if (buttonPressedAdd == true) {
-
-			// sets it to false
-			buttonPressedAdd = false;
-
-			// returns true
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Private helper method used to check if a remove entry was valid
-	 * 
-	 * @return true if valid and false if not
-	 */
-	private boolean removeEntry() {
-
-		// Checks if the button was pressed and was valid
-		if (buttonPressedRemove == true) {
-
-			// If valid set remove and add to false
-			buttonPressedRemove = false;
-			buttonPressedAdd = false;
-
-			// Return true
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -699,26 +659,20 @@ public class MainGUI extends Application {
 		// If the button is clicked
 		removeEntry.setOnAction(e -> {
 
-			// Check if the specified values were entered correctly
-			if (farmID.getText().equals("00700") && year.getText().equals("2019") && month.getText().equals("March")
-					&& day.getText().equals("15")) {
+			newFile.removeFarm(farmID.getText(), year.getText(), month.getText(), day.getText());
 
-				// Sets the buttonPressedRemove to true
-				this.buttonPressedRemove = true;
+			// Creates a new grid for the confirmation method
+			GridPane newRemoveGrid = new GridPane();
+			newRemoveGrid.setPadding(new Insets(80, 40, 80, 40));
+			newRemoveGrid.setVgap(10);
+			newRemoveGrid.setHgap(30);
+			newRemoveGrid.setStyle("-fx-background-color: #F0F8FF");
 
-				// Creates a new grid for the confirmation method
-				GridPane newRemoveGrid = new GridPane();
-				newRemoveGrid.setPadding(new Insets(80, 40, 80, 40));
-				newRemoveGrid.setVgap(10);
-				newRemoveGrid.setHgap(30);
-				newRemoveGrid.setStyle("-fx-background-color: #F0F8FF");
+			// Creates a new confirmation scene
+			Scene confirmationScene = new Scene(newRemoveGrid, 600, 500);
 
-				// Creates a new confirmation scene
-				Scene confirmationScene = new Scene(newRemoveGrid, 600, 500);
-
-				// Calls the confirmation method with the action remove
-				confirmation(newRemoveGrid, confirmationScene, styles, "remove");
-			}
+			// Calls the confirmation method with the action remove
+			confirmation(newRemoveGrid, confirmationScene, styles, "remove");
 
 		});
 
@@ -863,161 +817,6 @@ public class MainGUI extends Application {
 		window.show();
 	}
 
-<<<<<<< HEAD
-=======
-	/**
-	 * 
-	 * @param grid
-	 * @param scene
-	 */
-	private void displayOptions(GridPane grid, Scene scene) {
-		GridPane farmReportGrid = new GridPane();
-		farmReportGrid.setPadding(new Insets(80, 40, 80, 40));
-		farmReportGrid.setStyle("-fx-background-color: #F0F8FF");
-
-		GridPane anualReportGrid = new GridPane();
-		anualReportGrid.setPadding(new Insets(80, 40, 80, 40));
-		anualReportGrid.setVgap(10);
-		anualReportGrid.setHgap(30);
-		anualReportGrid.setStyle("-fx-background-color: #F0F8FF");
-
-		GridPane monthlyReportGrid = new GridPane();
-		monthlyReportGrid.setPadding(new Insets(80, 40, 80, 40));
-		monthlyReportGrid.setVgap(10);
-		monthlyReportGrid.setHgap(30);
-		monthlyReportGrid.setStyle("-fx-background-color: #F0F8FF");
-		
-		GridPane dateRangeReportGrid = new GridPane();
-		dateRangeReportGrid.setPadding(new Insets(80, 40, 80, 40));
-		dateRangeReportGrid.setVgap(10);
-		dateRangeReportGrid.setHgap(30);
-		dateRangeReportGrid.setStyle("-fx-background-color: #F0F8FF");
-
-		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;" +
-				"-fx-font: bold italic 15pt \"Arial\";";
-
-		String labelStyle = "-fx-font: bold italic 15pt \"Arial\";";
-
-		Label label = new Label("Choose a report type:");
-		label.setMaxSize(500, 200);
-		label.setStyle(labelStyle);
-		GridPane.setConstraints(label, 3, 1);
-
-		Button farmReport = new Button("Farm Report");
-		farmReport.setStyle(styles);
-		farmReport.setEffect(new DropShadow());
-		farmReport.setMaxWidth(400);
-		farmReport.setMaxHeight(200);
-		GridPane.setConstraints(farmReport, 3, 2);
-
-		Button anualReport = new Button("Anual Report");
-		anualReport.setStyle(styles);
-		anualReport.setEffect(new DropShadow());
-		anualReport.setMaxWidth(400);
-		anualReport.setMaxHeight(200);
-		GridPane.setConstraints(anualReport, 3, 3);
-
-		Button monthlyReport = new Button("Monthly Report");
-		monthlyReport.setStyle(styles);
-		monthlyReport.setEffect(new DropShadow());
-		monthlyReport.setMaxWidth(400);
-		monthlyReport.setMaxHeight(200);
-		GridPane.setConstraints(monthlyReport, 3, 4);
-		
-		
-		Button dateRangeReport = new Button("Date Range Report");
-		dateRangeReport.setStyle(styles);
-		dateRangeReport.setEffect(new DropShadow());
-		dateRangeReport.setMaxWidth(400);
-		dateRangeReport.setMaxHeight(200);
-		GridPane.setConstraints(dateRangeReport, 3, 4);
-
-		Button returnHome = new Button("Return to Main Menu");
-		returnHome.setStyle(styles);
-		returnHome.setEffect(new DropShadow());
-		returnHome.setMaxWidth(400);
-		returnHome.setMaxHeight(200);
-		GridPane.setConstraints(returnHome, 3, 5);
-		returnHome.setOnAction(e -> window.setScene(main));
-
-		grid.getChildren().addAll(label, farmReport, anualReport, monthlyReport, dateRangeReport, returnHome);
-
-		window.setScene(scene);
-		window.show();
-
-		
-
-		farmReport.setOnAction(e -> getFarmReport());
-		anualReport.setOnAction(e -> getAnualReport());
-		monthlyReport.setOnAction(e -> getMonthlyReport());
-		dateRangeReport.setOnAction(e -> getDateRangeReport());
-	}
-
-	public void getFarmReport() {
-
-		//Sets a new grid for a potential new window when Farm Report is clicked
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(80, 40, 80, 40));
-		grid.setVgap(25);
-		grid.setHgap(30);
-		grid.setStyle("-fx-background-color: #F0F8FF");
-		
-		//Sets a new scene if the Farm Report button is pushed
-		Scene scene = new Scene(grid, 600, 500);
-
-		displayData(grid, scene);
-
-	}
-	
-	public void getAnualReport() {
-
-		//Sets a new grid for a potential new window when Anual Report is clicked
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(80, 40, 80, 40));
-		grid.setVgap(25);
-		grid.setHgap(30);
-		grid.setStyle("-fx-background-color: #F0F8FF");
-		
-		//Sets a new scene if the Anual Report button is pushed
-		Scene scene = new Scene(grid, 600, 500);
-
-		displayData(grid, scene);
-
-	}
-	
-	public void getMonthlyReport() {
-
-		//Sets a new grid for a potential new window when Monthly Report is clicked
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(80, 40, 80, 40));
-		grid.setVgap(25);
-		grid.setHgap(30);
-		grid.setStyle("-fx-background-color: #F0F8FF");
-		
-		//Sets a new scene if the Montly Report button is pushed
-		Scene scene = new Scene(grid, 600, 500);
-
-		displayData(grid, scene);
-
-	}
-	
-	public void getDateRangeReport() {
-
-		//Sets a new grid for a potential new window when Date Range Report is clicked
-		GridPane grid = new GridPane();
-		grid.setPadding(new Insets(80, 40, 80, 40));
-		grid.setVgap(25);
-		grid.setHgap(30);
-		grid.setStyle("-fx-background-color: #F0F8FF");
-		
-		//Sets a new scene if the Date Range Report button is pushed
-		Scene scene = new Scene(grid, 600, 500);
-
-		displayData(grid, scene);
-
-	}
-	
->>>>>>> 6d737a8cb0922fc6109fbc356faa46e70c35713a
 	/**
 	 * This method is used to display the list of data that was uploaded, added,
 	 * removed, and changed
@@ -1063,16 +862,60 @@ public class MainGUI extends Application {
 			}
 		});
 
+		// Creates a new addGrid if user selects to add Data
+		GridPane annualReportGrid = new GridPane();
+		annualReportGrid.setPadding(new Insets(80, 40, 80, 40));
+		annualReportGrid.setVgap(10);
+		annualReportGrid.setHgap(30);
+		annualReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		// Creates a new addScene
+		Scene annualScene = new Scene(annualReportGrid, 600, 500);
+
+		// Button to get a farm Report
+		Button annualReport = new Button("Annual Report");
+		annualReport.setStyle(styles);
+		annualReport.setMaxWidth(300);
+		annualReport.setMaxHeight(200);
+		GridPane.setConstraints(annualReport, 5, 3);
+		annualReport.setOnAction(e -> {
+			if (newFile.confirmUpload() == true) {
+				annualReport(annualReportGrid, annualScene, scene);
+			}
+		});
+
+		// Creates a new addGrid if user selects to add Data
+		GridPane monthlyReportGrid = new GridPane();
+		monthlyReportGrid.setPadding(new Insets(80, 40, 80, 40));
+		monthlyReportGrid.setVgap(10);
+		monthlyReportGrid.setHgap(30);
+		monthlyReportGrid.setStyle("-fx-background-color: #F0F8FF");
+
+		// Creates a new addScene
+		Scene monthlyScene = new Scene(monthlyReportGrid, 600, 500);
+
+		// Button to get a farm Report
+		Button monthlyReport = new Button("Monthly Report");
+		monthlyReport.setStyle(styles);
+		monthlyReport.setMaxWidth(300);
+		monthlyReport.setMaxHeight(200);
+		GridPane.setConstraints(monthlyReport, 5, 4);
+		monthlyReport.setOnAction(e -> {
+			if (newFile.confirmUpload() == true) {
+				monthlyReport(monthlyReportGrid, monthlyScene, scene);
+			}
+		});
+
 		// Button used to return to the main menu
 		Button returnHome = new Button("Return to Main Menu");
 		returnHome.setMaxWidth(300);
 		returnHome.setMaxHeight(200);
 		returnHome.setStyle(styles);
 		returnHome.setOnAction(e -> window.setScene(main));
-		GridPane.setConstraints(returnHome, 5, 3);
+		GridPane.setConstraints(returnHome, 5, 5);
 
 		// Adds the weights, the buttons, and labels to the grid
-		grid.getChildren().addAll(returnHome, label, farmReport);
+		grid.getChildren().addAll(returnHome, label, farmReport, annualReport, monthlyReport);
 
 		window.setScene(scene);
 		window.show();
@@ -1125,7 +968,21 @@ public class MainGUI extends Application {
 		fileOutput.setMaxHeight(200);
 		GridPane.setConstraints(fileOutput, 3, 4);
 		fileOutput.setOnAction(e -> {
-			newFile.farmReport(true, farm.getText(), year.getText());
+
+			try {
+				newFile.farmReport(true, farm.getText(), year.getText());
+			} catch (NullPointerException incorrect) {
+				// Creates a new label for wrong input
+				Label wrong = new Label("Farm ID wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 3, 6);
+				grid.getChildren().add(wrong);
+				return;
+			}
 
 			// Creates a new grid for the confirmation method
 			GridPane newFarmGrid = new GridPane();
@@ -1151,6 +1008,175 @@ public class MainGUI extends Application {
 
 		// Adds all the text boxes, labels, and buttons to the grid
 		grid.getChildren().addAll(label, fileOutput, labelYear, year, farm, farmID, returnHome);
+		window.setScene(scene);
+		window.show();
+	}
+
+	private void annualReport(GridPane grid, Scene scene, Scene returnScene) {
+		// Common styles for the buttons and labels
+		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;"
+				+ "-fx-font: bold italic 15pt \"Arial\";";
+
+		String labelStyle = "-fx-font: bold italic 15pt \"Arial\";";
+
+		// Creates a new label at the top of the screen
+		Label label = new Label("Annual Report:");
+		label.setMaxSize(500, 200);
+		label.setStyle(labelStyle);
+
+		// Places the label at 5th colum and 1st row
+		GridPane.setConstraints(label, 3, 1);
+
+		// Label used for year
+		Label labelYear = new Label("Enter a Year:");
+		labelYear.setMaxSize(300, 200);
+		labelYear.setStyle(labelStyle);
+		GridPane.setConstraints(labelYear, 2, 2);
+
+		// Text box for user to enter the year
+		TextField year = new TextField();
+		year.setPromptText("Enter Year");
+		year.setMaxSize(300, 100);
+		GridPane.setConstraints(year, 3, 2);
+
+		// Button for file output
+		Button fileOutput = new Button("Click for a file");
+		fileOutput.setStyle(styles);
+		fileOutput.setMaxWidth(300);
+		fileOutput.setMaxHeight(200);
+		GridPane.setConstraints(fileOutput, 3, 3);
+		fileOutput.setOnAction(e -> {
+
+			try {
+				newFile.annualReport(true, year.getText());
+			} catch (NullPointerException incorrect) {
+				// Creates a new label for wrong input
+				Label wrong = new Label("Year wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 3, 5);
+				grid.getChildren().add(wrong);
+				return;
+			}
+
+			// Creates a new grid for the confirmation method
+			GridPane newAnnualGrid = new GridPane();
+			newAnnualGrid.setPadding(new Insets(80, 40, 80, 40));
+			newAnnualGrid.setVgap(10);
+			newAnnualGrid.setHgap(30);
+			newAnnualGrid.setStyle("-fx-background-color: #F0F8FF");
+
+			// Creates a new confirmation scene
+			Scene confirmationScene = new Scene(newAnnualGrid, 600, 500);
+
+			// Calls the confirmation method with the action remove
+			confirmation(newAnnualGrid, confirmationScene, styles, "AnnualReport");
+		});
+
+		// BUtton to return to the main menu
+		Button returnHome = new Button("Return to Main Menu");
+		returnHome.setStyle(styles);
+		returnHome.setMaxWidth(300);
+		returnHome.setMaxHeight(200);
+		GridPane.setConstraints(returnHome, 3, 4);
+		returnHome.setOnAction(e -> window.setScene(main));
+
+		// Adds all the text boxes, labels, and buttons to the grid
+		grid.getChildren().addAll(label, fileOutput, labelYear, year, returnHome);
+		window.setScene(scene);
+		window.show();
+	}
+
+	private void monthlyReport(GridPane grid, Scene scene, Scene returnScene) {
+		// Common styles for the buttons and labels
+		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;"
+				+ "-fx-font: bold italic 15pt \"Arial\";";
+
+		String labelStyle = "-fx-font: bold italic 15pt \"Arial\";";
+
+		// Creates a new label at the top of the screen
+		Label label = new Label("Monthly Report:");
+		label.setMaxSize(500, 200);
+		label.setStyle(labelStyle);
+
+		// Places the label at 5th colum and 1st row
+		GridPane.setConstraints(label, 3, 1);
+
+		// The label to show the user where to enter the day
+		Label year = new Label("Enter a year:");
+		year.setMaxSize(300, 200);
+		year.setStyle(labelStyle);
+		GridPane.setConstraints(year, 2, 2);
+
+		// The text box for the user to enter the day
+		TextField yearText = new TextField();
+		yearText.setPromptText("Enter Year");
+		yearText.setMaxSize(300, 100);
+		;
+		GridPane.setConstraints(yearText, 3, 2);
+
+		// Label used for weight
+		Label labelMonth = new Label("Enter Month:");
+		labelMonth.setMaxSize(300, 200);
+		labelMonth.setStyle(labelStyle);
+		GridPane.setConstraints(labelMonth, 2, 3);
+
+		// Text box for user to enter the new milk weight
+		TextField month = new TextField();
+		month.setPromptText("Enter Number of Month");
+		month.setMaxSize(300, 100);
+		GridPane.setConstraints(month, 3, 3);
+
+		// Button for file output
+		Button fileOutput = new Button("Click for a file");
+		fileOutput.setStyle(styles);
+		fileOutput.setMaxWidth(300);
+		fileOutput.setMaxHeight(200);
+		GridPane.setConstraints(fileOutput, 3, 4);
+		fileOutput.setOnAction(e -> {
+
+			try {
+				newFile.monthlyReport(true, yearText.getText(), month.getText());
+			} catch (IllegalArgumentException incorrect) {
+				// Creates a new label for wrong input
+				Label wrong = new Label("Month wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 3, 6);
+				grid.getChildren().add(wrong);
+				return;
+			}
+
+			// Creates a new grid for the confirmation method
+			GridPane newMonthGrid = new GridPane();
+			newMonthGrid.setPadding(new Insets(80, 40, 80, 40));
+			newMonthGrid.setVgap(10);
+			newMonthGrid.setHgap(30);
+			newMonthGrid.setStyle("-fx-background-color: #F0F8FF");
+
+			// Creates a new confirmation scene
+			Scene confirmationScene = new Scene(newMonthGrid, 600, 500);
+
+			// Calls the confirmation method with the action remove
+			confirmation(newMonthGrid, confirmationScene, styles, "MonthlyReport");
+		});
+
+		// BUtton to return to the main menu
+		Button returnHome = new Button("Return to Main Menu");
+		returnHome.setStyle(styles);
+		returnHome.setMaxWidth(300);
+		returnHome.setMaxHeight(200);
+		GridPane.setConstraints(returnHome, 3, 5);
+		returnHome.setOnAction(e -> window.setScene(main));
+
+		// Adds all the text boxes, labels, and buttons to the grid
+		grid.getChildren().addAll(label, fileOutput, yearText, year, month, labelMonth, returnHome);
 		window.setScene(scene);
 		window.show();
 	}
