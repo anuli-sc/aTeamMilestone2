@@ -1,4 +1,4 @@
-package application;
+ package application;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +42,11 @@ public class UploadedFile {
 			throw new FileNotFoundException();
 		}
 	}
+	
+	public UploadedFile() {
+		// Initializes the farms arrayList
+		farms = new ArrayList<Farm>();
+	}
 
 	/**
 	 * The loadFile to load a file
@@ -58,45 +63,40 @@ public class UploadedFile {
 
 		// Strings to parse through the file
 		String line;
+		//Strings to split the lines
 		String fileSplit = ",";
+		String dateSplit = "-";
 
 		try {
-
-			// Creates a FileReader for the file
 			FileReader f1 = new FileReader(f);
-
-			// Creates a BufferedReader for the FileReader
 			BufferedReader br = new BufferedReader(f1);
+			
 			try {
-
-				// While there is a line
+				//skips the header line
+				br.readLine();
+				//recurses through each line of the csv
 				while ((line = br.readLine()) != null) {
-
-					// Split the line into an array
+					
+					//splits the csv lines into date, farmID, and weight
 					String[] farmInput = line.split(fileSplit);
+					//splits the date into year, month, and day
+					String[] date= farmInput[0].split(dateSplit);
+					//isolates the integer farmID
+					String[] isolatedFarmID= farmInput[1].split(" ");
 
-					// The first index is the farmID
-					String farmID = farmInput[0];
+					String farmID = isolatedFarmID[1];
+					String year = date[0];
+					String month = date[1];
+					String day = date[2];
+					String milkWeight = farmInput[2];
 
-					// The second is the year
-					String year = farmInput[1];
-
-					// Third is month
-					String month = farmInput[2];
-
-					// Fourth is day
-					String day = farmInput[3];
-
-					// Fifth is weight
-					String milkWeight = farmInput[4];
-
-					// Creat a new farm with the parsed inputs
+					//creates a new farm weight and adds it to the arraylist
 					Farm farm = new Farm(farmID, year, month, day, milkWeight);
-
-					// Add the farms to the farms arraylist
 					farms.add(farm);
-
+					
+					
 				}
+
 
 				// Close the reader
 				br.close();
@@ -143,11 +143,16 @@ public class UploadedFile {
 
 			// Adds the farm to the farms list
 			farms.add(newFarm);
+			
+			if(uploaded==false) {
+				uploaded=true;
+			}
 		} catch (NumberFormatException e) {
 
 			// If input was not numbers
 			throw new NumberFormatException();
 		}
+		
 	}
 
 	/**
