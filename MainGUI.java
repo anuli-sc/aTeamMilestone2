@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 public class MainGUI extends Application {
 	private Stage window; // The main window
 	private Scene main; // The main menu scene
-	private UploadedFile newFile; //The uploaded file
+	private UploadedFile newFile=new UploadedFile(); //The uploaded file
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -426,7 +426,7 @@ public class MainGUI extends Application {
 
 		// Creates a text box for the user to enter a month
 		TextField month = new TextField();
-		month.setPromptText("Enter Month");
+		month.setPromptText("Enter Month as Number");
 		month.setMaxSize(300, 100);
 		;
 		GridPane.setConstraints(month, 2, 4);
@@ -497,7 +497,7 @@ public class MainGUI extends Application {
 				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
 				wrong.setStyle(wrongLabelStyle);
 
-				// Places the label at 5th colum and 1st row
+				// Places the label at 5th column and 1st row
 				GridPane.setConstraints(wrong, 2, 10);
 				grid.getChildren().add(wrong);
 				return;
