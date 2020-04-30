@@ -5,21 +5,25 @@ import java.io.FileNotFoundException;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MainGUI extends Application {
 	private Stage window; // The main window
 	private Scene main; // The main menu scene
-	private UploadedFile newFile;
+	private UploadedFile newFile; //The uploaded file
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -119,8 +123,21 @@ public class MainGUI extends Application {
 
 		GridPane.setConstraints(displayData, 6, 4);
 
-		// When display button is pressed, the displayData method is called
-		displayData.setOnAction(e -> displayData(displayGrid, displayScene));
+		try {
+			// When display button is pressed, the displayData method is called
+			displayData.setOnAction(e -> displayData(displayGrid, displayScene));
+		} catch (NullPointerException incorrect) {
+			// Creates a new label for wrong input
+			Label wrong = new Label("Upload File");
+			wrong.setMaxSize(100, 100);
+			String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+			wrong.setStyle(wrongLabelStyle);
+
+			// Places the label at 5th colum and 1st row
+			GridPane.setConstraints(wrong, 6, 5);
+			grid.getChildren().add(wrong);
+			return;
+		}
 
 		// Adds all the buttons and labels to the grid
 		grid.getChildren().addAll(label, uploadData, editData, displayData);
@@ -232,7 +249,11 @@ public class MainGUI extends Application {
 				// When the upload button is pressed, the confirmation method is called
 				fileHolder.setOnAction(newEvent -> {
 					try {
+						
+						//Calls UploadedFile with the name of the user's file
 						this.newFile = new UploadedFile(selectedFile.getName());
+						
+						//Sends the user a confirmation screen
 						confirmation(confirm, confirmScene, styles, "upload");
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
@@ -449,21 +470,38 @@ public class MainGUI extends Application {
 		// When the button is pressed
 		addEntry.setOnAction(e -> {
 
-			newFile.addFarm(farmID.getText(), year.getText(), month.getText(), day.getText(), weight.getText());
-			
-			// Create a new add grid to show confirmation
-			GridPane newAddGrid = new GridPane();
-			newAddGrid.setPadding(new Insets(80, 40, 80, 40));
-			newAddGrid.setVgap(10);
-			newAddGrid.setHgap(30);
-			newAddGrid.setStyle("-fx-background-color: #F0F8FF");
+			try {
+				
+				//Calls the addFarm method with the user inputs
+				newFile.addFarm(farmID.getText(), year.getText(), month.getText(), day.getText(), weight.getText());
 
-			// Create a new confirmation scene
-			Scene confirmationScene = new Scene(newAddGrid, 600, 500);
+				// Create a new add grid to show confirmation
+				GridPane newAddGrid = new GridPane();
+				newAddGrid.setPadding(new Insets(80, 40, 80, 40));
+				newAddGrid.setVgap(10);
+				newAddGrid.setHgap(30);
+				newAddGrid.setStyle("-fx-background-color: #F0F8FF");
 
-			// Call the confirmation method with newAddGrid and confirmation scene
-			// with the add action
-			confirmation(newAddGrid, confirmationScene, styles, "add");
+				// Create a new confirmation scene
+				Scene confirmationScene = new Scene(newAddGrid, 600, 500);
+
+				// Call the confirmation method with newAddGrid and confirmation scene
+				// with the add action
+				confirmation(newAddGrid, confirmationScene, styles, "add");
+			} catch (NumberFormatException incorrect) {
+				//If arguments were not numbers
+				
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 2, 10);
+				grid.getChildren().add(wrong);
+				return;
+			}
 
 		});
 
@@ -525,6 +563,16 @@ public class MainGUI extends Application {
 			grid.getChildren().add(label);
 		}
 
+		//If action was change
+		if (action.equals("change")) {
+			// Show the specific message for change data
+			Label label = new Label("Your entry has been changed, confirm in Display Data");
+			label.setMaxSize(500, 200);
+			label.setStyle(labelStyle);
+			GridPane.setConstraints(label, 4, 1);
+			grid.getChildren().add(label);
+		}
+
 		// If the action was to upload a file
 		if (action.equals("upload")) {
 
@@ -536,8 +584,9 @@ public class MainGUI extends Application {
 			grid.getChildren().add(label);
 		}
 
+		//If action was to get farm report
 		if (action.equals("FarmReport")) {
-			// Show the specific message for added file
+			// Show the specific message for farm report
 			Label label = new Label("Your farm report is ready, find farmReport.txt");
 			label.setMaxSize(500, 200);
 			label.setStyle(labelStyle);
@@ -545,8 +594,9 @@ public class MainGUI extends Application {
 			grid.getChildren().add(label);
 		}
 
+		//If action was to get annual report
 		if (action.equals("AnnualReport")) {
-			// Show the specific message for added file
+			// Show the specific message for annual report
 			Label label = new Label("Your annual report is ready, find annualReport.txt");
 			label.setMaxSize(500, 200);
 			label.setStyle(labelStyle);
@@ -554,8 +604,9 @@ public class MainGUI extends Application {
 			grid.getChildren().add(label);
 		}
 
+		//If action was to get a monthly report
 		if (action.equals("MonthlyReport")) {
-			// Show the specific message for added file
+			// Show the specific message for monthly report
 			Label label = new Label("Your monthly report is ready, find monthlyReport.txt");
 			label.setMaxSize(500, 200);
 			label.setStyle(labelStyle);
@@ -659,20 +710,50 @@ public class MainGUI extends Application {
 		// If the button is clicked
 		removeEntry.setOnAction(e -> {
 
-			newFile.removeFarm(farmID.getText(), year.getText(), month.getText(), day.getText());
+			try {
+				
+				//Calls the remove farm method with user inputs
+				newFile.removeFarm(farmID.getText(), year.getText(), month.getText(), day.getText());
 
-			// Creates a new grid for the confirmation method
-			GridPane newRemoveGrid = new GridPane();
-			newRemoveGrid.setPadding(new Insets(80, 40, 80, 40));
-			newRemoveGrid.setVgap(10);
-			newRemoveGrid.setHgap(30);
-			newRemoveGrid.setStyle("-fx-background-color: #F0F8FF");
+				// Creates a new grid for the confirmation method
+				GridPane newRemoveGrid = new GridPane();
+				newRemoveGrid.setPadding(new Insets(80, 40, 80, 40));
+				newRemoveGrid.setVgap(10);
+				newRemoveGrid.setHgap(30);
+				newRemoveGrid.setStyle("-fx-background-color: #F0F8FF");
 
-			// Creates a new confirmation scene
-			Scene confirmationScene = new Scene(newRemoveGrid, 600, 500);
+				// Creates a new confirmation scene
+				Scene confirmationScene = new Scene(newRemoveGrid, 600, 500);
 
-			// Calls the confirmation method with the action remove
-			confirmation(newRemoveGrid, confirmationScene, styles, "remove");
+				// Calls the confirmation method with the action remove
+				confirmation(newRemoveGrid, confirmationScene, styles, "remove");
+			} catch (NullPointerException incorrect) {
+				//If the farm was not found
+				
+				// Creates a new label for wrong input
+				Label wrong = new Label("Farm not found");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 2, 10);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NumberFormatException fail) {
+				//If the inputs were not numbers
+				
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 2, 11);
+				grid.getChildren().add(wrong);
+				return;
+			}
 
 		});
 
@@ -793,6 +874,54 @@ public class MainGUI extends Application {
 		changeEntry.setMaxWidth(300);
 		changeEntry.setMaxHeight(200);
 		GridPane.setConstraints(changeEntry, 2, 7);
+		
+		//When clicked
+		changeEntry.setOnAction(e -> {
+			try {
+				
+				//Changes a farm with user inputs
+				newFile.changeFarm(farmID.getText(), year.getText(), month.getText(), day.getText(), weight.getText());
+
+				// Creates a new grid for the confirmation method
+				GridPane newChangeGrid = new GridPane();
+				newChangeGrid.setPadding(new Insets(80, 40, 80, 40));
+				newChangeGrid.setVgap(10);
+				newChangeGrid.setHgap(30);
+				newChangeGrid.setStyle("-fx-background-color: #F0F8FF");
+
+				// Creates a new confirmation scene
+				Scene confirmationScene = new Scene(newChangeGrid, 600, 500);
+
+				// Calls the confirmation method with the action change
+				confirmation(newChangeGrid, confirmationScene, styles, "change");
+			} catch (NullPointerException incorrect) {
+				//If the farm does not exist
+				
+				// Creates a new label for wrong input
+				Label wrong = new Label("Farm not found");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 2, 10);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NumberFormatException fail) {
+				//If arguments were not numbers
+				
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 2, 11);
+				grid.getChildren().add(wrong);
+				return;
+			}
+		});
 
 		// Button to return to the edit menu
 		Button returnEdit = new Button("Return to Edit Menu");
@@ -831,6 +960,19 @@ public class MainGUI extends Application {
 				+ "-fx-font: bold italic 15pt \"Arial\";";
 
 		String labelStyle = "-fx-font: bold italic 15pt \"Arial\";";
+
+		if (newFile.confirmUpload() == false) {
+			// Creates a new label for wrong input
+			Label wrong = new Label("Farm ID wrong");
+			wrong.setMaxSize(100, 100);
+			String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+			wrong.setStyle(wrongLabelStyle);
+
+			// Places the label at 5th colum and 7th row
+			GridPane.setConstraints(wrong, 5, 7);
+			grid.getChildren().add(wrong);
+			return;
+		}
 
 		// Creates a new label at the top of the screen
 		Label label = new Label("Available Data:");
@@ -921,6 +1063,15 @@ public class MainGUI extends Application {
 		window.show();
 	}
 
+	/**
+	 * This method is used to give the user a farmReport which gives a report of
+	 * every farm, the total weight per month of all farms, and the percentage of
+	 * the total weight of the month with a particular farm
+	 * 
+	 * @param grid        GridPane to hold buttons etc.
+	 * @param scene       Scene for the farmReport
+	 * @param returnScene the display Scene
+	 */
 	private void farmReport(GridPane grid, Scene scene, Scene returnScene) {
 		// Common styles for the buttons and labels
 		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;"
@@ -933,53 +1084,73 @@ public class MainGUI extends Application {
 		label.setMaxSize(500, 200);
 		label.setStyle(labelStyle);
 
-		// Places the label at 5th colum and 1st row
+		// Places the label at 3rd colum and 1st row
 		GridPane.setConstraints(label, 3, 1);
 
-		// The label to show the user where to enter the day
+		// The label to show the user where to enter the FarmID
 		Label farmID = new Label("Enter a Farm ID:");
 		farmID.setMaxSize(300, 200);
 		farmID.setStyle(labelStyle);
 		GridPane.setConstraints(farmID, 2, 2);
 
-		// The text box for the user to enter the day
+		// The text box for the user to enter the FarmID
 		TextField farm = new TextField();
 		farm.setPromptText("Enter Farm ID");
 		farm.setMaxSize(300, 100);
 		;
 		GridPane.setConstraints(farm, 3, 2);
 
-		// Label used for weight
+		// Label used for year
 		Label labelYear = new Label("Enter a Year:");
 		labelYear.setMaxSize(300, 200);
 		labelYear.setStyle(labelStyle);
 		GridPane.setConstraints(labelYear, 2, 3);
 
-		// Text box for user to enter the new milk weight
+		// Text box for user to enter the year
 		TextField year = new TextField();
 		year.setPromptText("Enter Year");
 		year.setMaxSize(300, 100);
 		GridPane.setConstraints(year, 3, 3);
 
-		// Button for file output
+		// Button for file output if user wants the farmReport in a file
 		Button fileOutput = new Button("Click for a file");
 		fileOutput.setStyle(styles);
 		fileOutput.setMaxWidth(300);
 		fileOutput.setMaxHeight(200);
 		GridPane.setConstraints(fileOutput, 3, 4);
+
+		// When clicked
 		fileOutput.setOnAction(e -> {
 
+			// Tries to call the farmReport method in UploadedFile
 			try {
+
+				// Calls farmReport with true, the user's farmID and year
 				newFile.farmReport(true, farm.getText(), year.getText());
 			} catch (NullPointerException incorrect) {
+				// When FarmID is not found
+
 				// Creates a new label for wrong input
 				Label wrong = new Label("Farm ID wrong");
 				wrong.setMaxSize(100, 100);
 				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
 				wrong.setStyle(wrongLabelStyle);
 
-				// Places the label at 5th colum and 1st row
+				// Places the label at 3rd colum and 6th row
 				GridPane.setConstraints(wrong, 3, 6);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NumberFormatException fail) {
+				// When the input is not a number
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3rd colum and 7th row
+				GridPane.setConstraints(wrong, 3, 7);
 				grid.getChildren().add(wrong);
 				return;
 			}
@@ -994,8 +1165,68 @@ public class MainGUI extends Application {
 			// Creates a new confirmation scene
 			Scene confirmationScene = new Scene(newFarmGrid, 600, 500);
 
-			// Calls the confirmation method with the action remove
+			// Calls the confirmation method with the action FarmReport
 			confirmation(newFarmGrid, confirmationScene, styles, "FarmReport");
+		});
+
+		// Button for display if user wants the data to be displayed
+		Button display = new Button("Click to Display");
+		display.setStyle(styles);
+		display.setMaxWidth(300);
+		display.setMaxHeight(200);
+		GridPane.setConstraints(display, 3, 5);
+
+		// When clicked
+		display.setOnAction(e -> {
+
+			try {
+
+				/*
+				 * Calls the farmReport method with false, user farmID and year and stores it in
+				 * a string
+				 */
+				String s = newFile.farmReport(false, farm.getText(), year.getText());
+
+				// Creates a new BorderPane for the display window
+				BorderPane root = new BorderPane();
+
+				// Creates a new ScrollPane for the display window
+				ScrollPane sp = new ScrollPane();
+
+				// Sets the content of the scrollpane as the borderpane
+				sp.setContent(root);
+
+				// Creates a new scene for the display window
+				Scene displayText = new Scene(sp, 600, 500);
+
+				// Calls the displayText method with the particular String
+				displayText(s, displayText, root, styles);
+			} catch (NullPointerException incorrect) {
+				// If the user types in a non existant FarmID
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Farm ID wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				GridPane.setConstraints(wrong, 3, 6);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NumberFormatException fail) {
+				// If input are not numbers
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				GridPane.setConstraints(wrong, 3, 7);
+				grid.getChildren().add(wrong);
+				return;
+			}
+
 		});
 
 		// BUtton to return to the main menu
@@ -1003,15 +1234,24 @@ public class MainGUI extends Application {
 		returnHome.setStyle(styles);
 		returnHome.setMaxWidth(300);
 		returnHome.setMaxHeight(200);
-		GridPane.setConstraints(returnHome, 3, 5);
+		GridPane.setConstraints(returnHome, 3, 6);
 		returnHome.setOnAction(e -> window.setScene(main));
 
 		// Adds all the text boxes, labels, and buttons to the grid
-		grid.getChildren().addAll(label, fileOutput, labelYear, year, farm, farmID, returnHome);
+		grid.getChildren().addAll(label, fileOutput, labelYear, year, farm, farmID, returnHome, display);
 		window.setScene(scene);
 		window.show();
 	}
 
+	/**
+	 * This method is used to give the user an annual report of farms. This gives a
+	 * total weight for the year and each farms total weight over the year and each
+	 * farm's percent of year's total weight
+	 * 
+	 * @param grid        the grid for the report
+	 * @param scene       the scene for the report
+	 * @param returnScene the display scene
+	 */
 	private void annualReport(GridPane grid, Scene scene, Scene returnScene) {
 		// Common styles for the buttons and labels
 		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;"
@@ -1023,8 +1263,6 @@ public class MainGUI extends Application {
 		Label label = new Label("Annual Report:");
 		label.setMaxSize(500, 200);
 		label.setStyle(labelStyle);
-
-		// Places the label at 5th colum and 1st row
 		GridPane.setConstraints(label, 3, 1);
 
 		// Label used for year
@@ -1039,24 +1277,41 @@ public class MainGUI extends Application {
 		year.setMaxSize(300, 100);
 		GridPane.setConstraints(year, 3, 2);
 
-		// Button for file output
+		// Button for file output if user wants the report in a file
 		Button fileOutput = new Button("Click for a file");
 		fileOutput.setStyle(styles);
 		fileOutput.setMaxWidth(300);
 		fileOutput.setMaxHeight(200);
 		GridPane.setConstraints(fileOutput, 3, 3);
+
+		// When clicked
 		fileOutput.setOnAction(e -> {
 
 			try {
+
+				// Calls the annualReport method in UploadedFile with true and user year
 				newFile.annualReport(true, year.getText());
 			} catch (NullPointerException incorrect) {
+				// If year is not in the data
+
 				// Creates a new label for wrong input
 				Label wrong = new Label("Year wrong");
 				wrong.setMaxSize(100, 100);
 				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
 				wrong.setStyle(wrongLabelStyle);
 
-				// Places the label at 5th colum and 1st row
+				GridPane.setConstraints(wrong, 3, 5);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NumberFormatException fail) {
+				// If input is not a number
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Wrong input");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
 				GridPane.setConstraints(wrong, 3, 5);
 				grid.getChildren().add(wrong);
 				return;
@@ -1072,8 +1327,65 @@ public class MainGUI extends Application {
 			// Creates a new confirmation scene
 			Scene confirmationScene = new Scene(newAnnualGrid, 600, 500);
 
-			// Calls the confirmation method with the action remove
+			// Calls the confirmation method with the action AnnualReport
 			confirmation(newAnnualGrid, confirmationScene, styles, "AnnualReport");
+		});
+
+		// Button for display if user wants to display the data instead
+		Button display = new Button("Click to Display");
+		display.setStyle(styles);
+		display.setMaxWidth(300);
+		display.setMaxHeight(200);
+		GridPane.setConstraints(display, 3, 4);
+
+		// When clicked
+		display.setOnAction(e -> {
+
+			try {
+
+				// Call annualReport with writeToFile as false and user year
+				String s = newFile.annualReport(false, year.getText());
+
+				// Create new BorderPane and ScrollPane for new window
+				BorderPane root = new BorderPane();
+				ScrollPane sp = new ScrollPane();
+
+				// Set content of sp as root
+				sp.setContent(root);
+
+				// Create a new display scene
+				Scene displayText = new Scene(sp, 600, 500);
+
+				// Call displayText with the particular string
+				displayText(s, displayText, root, styles);
+
+			} catch (NumberFormatException incorrect) {
+				// If input is not a number
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Year wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3th colum and 7th row
+				GridPane.setConstraints(wrong, 3, 7);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NullPointerException fail) {
+				// If user types in a year that does not exist
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Year not found");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3th colum and 8th row
+				GridPane.setConstraints(wrong, 3, 8);
+				grid.getChildren().add(wrong);
+				return;
+			}
 		});
 
 		// BUtton to return to the main menu
@@ -1081,15 +1393,24 @@ public class MainGUI extends Application {
 		returnHome.setStyle(styles);
 		returnHome.setMaxWidth(300);
 		returnHome.setMaxHeight(200);
-		GridPane.setConstraints(returnHome, 3, 4);
+		GridPane.setConstraints(returnHome, 3, 5);
 		returnHome.setOnAction(e -> window.setScene(main));
 
 		// Adds all the text boxes, labels, and buttons to the grid
-		grid.getChildren().addAll(label, fileOutput, labelYear, year, returnHome);
+		grid.getChildren().addAll(label, fileOutput, display, labelYear, year, returnHome);
 		window.setScene(scene);
 		window.show();
 	}
 
+	/**
+	 * This method returns a monthlyReport of the farm. It gives the Farms in a
+	 * particular month of a particular year and their total weight and percent of
+	 * the month's total weight
+	 * 
+	 * @param grid        grid to be displayed
+	 * @param scene       scene to be displayed
+	 * @param returnScene display scene
+	 */
 	private void monthlyReport(GridPane grid, Scene scene, Scene returnScene) {
 		// Common styles for the buttons and labels
 		String styles = "-fx-background-color: #00BFFF;" + "-fx-border-color: #008B8B;"
@@ -1102,53 +1423,72 @@ public class MainGUI extends Application {
 		label.setMaxSize(500, 200);
 		label.setStyle(labelStyle);
 
-		// Places the label at 5th colum and 1st row
+		// Places the label at 3rd colum and 1st row
 		GridPane.setConstraints(label, 3, 1);
 
-		// The label to show the user where to enter the day
+		// The label to show the user where to enter the year
 		Label year = new Label("Enter a year:");
 		year.setMaxSize(300, 200);
 		year.setStyle(labelStyle);
 		GridPane.setConstraints(year, 2, 2);
 
-		// The text box for the user to enter the day
+		// The text box for the user to enter the year
 		TextField yearText = new TextField();
 		yearText.setPromptText("Enter Year");
 		yearText.setMaxSize(300, 100);
 		;
 		GridPane.setConstraints(yearText, 3, 2);
 
-		// Label used for weight
+		// Label used for month
 		Label labelMonth = new Label("Enter Month:");
 		labelMonth.setMaxSize(300, 200);
 		labelMonth.setStyle(labelStyle);
 		GridPane.setConstraints(labelMonth, 2, 3);
 
-		// Text box for user to enter the new milk weight
+		// Text box for user to enter the month
 		TextField month = new TextField();
 		month.setPromptText("Enter Number of Month");
 		month.setMaxSize(300, 100);
 		GridPane.setConstraints(month, 3, 3);
 
-		// Button for file output
+		// Button for file output if user wants a file output
 		Button fileOutput = new Button("Click for a file");
 		fileOutput.setStyle(styles);
 		fileOutput.setMaxWidth(300);
 		fileOutput.setMaxHeight(200);
 		GridPane.setConstraints(fileOutput, 3, 4);
+
+		// When clicked
 		fileOutput.setOnAction(e -> {
 
 			try {
+
+				// Call monthlyReport with true and user inputs
 				newFile.monthlyReport(true, yearText.getText(), month.getText());
 			} catch (IllegalArgumentException incorrect) {
+				// If the month is not a valid month
+
 				// Creates a new label for wrong input
 				Label wrong = new Label("Month wrong");
 				wrong.setMaxSize(100, 100);
 				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
 				wrong.setStyle(wrongLabelStyle);
 
-				// Places the label at 5th colum and 1st row
-				GridPane.setConstraints(wrong, 3, 6);
+				// Places the label at 3th colum and 7th row
+				GridPane.setConstraints(wrong, 3, 7);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NullPointerException fail) {
+				// If the year does not exist in the data
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Year wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3th colum and 8th row
+				GridPane.setConstraints(wrong, 3, 8);
 				grid.getChildren().add(wrong);
 				return;
 			}
@@ -1163,8 +1503,62 @@ public class MainGUI extends Application {
 			// Creates a new confirmation scene
 			Scene confirmationScene = new Scene(newMonthGrid, 600, 500);
 
-			// Calls the confirmation method with the action remove
+			// Calls the confirmation method with the action MonthlyReport
 			confirmation(newMonthGrid, confirmationScene, styles, "MonthlyReport");
+		});
+
+		// Button to display data if user wants to display instead of a file
+		Button display = new Button("Click to Display");
+		display.setStyle(styles);
+		display.setMaxWidth(300);
+		display.setMaxHeight(200);
+		GridPane.setConstraints(display, 3, 5);
+
+		// When clicked
+		display.setOnAction(e -> {
+
+			try {
+
+				// Calls monthlyReport with false and user inputs
+				String s = newFile.monthlyReport(false, yearText.getText(), month.getText());
+
+				// Creates the new panes for the new window
+				BorderPane root = new BorderPane();
+				ScrollPane sp = new ScrollPane();
+				sp.setContent(root);
+
+				// Creates a new scene
+				Scene displayText = new Scene(sp, 600, 500);
+
+				// Calls displayText with the particular string
+				displayText(s, displayText, root, styles);
+			} catch (IllegalArgumentException incorrect) {
+				// If the month is not valid
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Month wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3th colum and 7th row
+				GridPane.setConstraints(wrong, 3, 7);
+				grid.getChildren().add(wrong);
+				return;
+			} catch (NullPointerException fail) {
+				// If the year does not exist
+
+				// Creates a new label for wrong input
+				Label wrong = new Label("Year wrong");
+				wrong.setMaxSize(100, 100);
+				String wrongLabelStyle = "-fx-font: bold italic 10pt \"Arial\";";
+				wrong.setStyle(wrongLabelStyle);
+
+				// Places the label at 3th colum and 7th row
+				GridPane.setConstraints(wrong, 3, 7);
+				grid.getChildren().add(wrong);
+				return;
+			}
 		});
 
 		// BUtton to return to the main menu
@@ -1172,11 +1566,46 @@ public class MainGUI extends Application {
 		returnHome.setStyle(styles);
 		returnHome.setMaxWidth(300);
 		returnHome.setMaxHeight(200);
-		GridPane.setConstraints(returnHome, 3, 5);
+		GridPane.setConstraints(returnHome, 3, 6);
 		returnHome.setOnAction(e -> window.setScene(main));
 
 		// Adds all the text boxes, labels, and buttons to the grid
-		grid.getChildren().addAll(label, fileOutput, yearText, year, month, labelMonth, returnHome);
+		grid.getChildren().addAll(label, fileOutput, yearText, display, year, month, labelMonth, returnHome);
+		window.setScene(scene);
+		window.show();
+	}
+
+	/**
+	 * This method is used to display text
+	 * 
+	 * @param text   the text to be displayed
+	 * @param scene  the scene to be displayed in
+	 * @param root   the pane to be displayed in
+	 * @param styles the styles used commonly
+	 */
+	private void displayText(String text, Scene scene, BorderPane root, String styles) {
+
+		// Creates a new text
+		Text t = new Text();
+
+		// Sets the text to the passed in text
+		t.setText(text);
+
+		// Sets the text to the left side of the screen
+		root.setLeft(t);
+
+		// BUtton to return to the main menu
+		Button returnHome = new Button("Return to Main Menu");
+		returnHome.setStyle(styles);
+		returnHome.setMaxWidth(300);
+		returnHome.setMaxHeight(200);
+		returnHome.setLayoutX(t.getX() + 1);
+		returnHome.setLayoutY(t.getY() + 1);
+		returnHome.setOnAction(e -> window.setScene(main));
+
+		// Sets the button to the bottom of the screen
+		root.setBottom(returnHome);
+
 		window.setScene(scene);
 		window.show();
 	}
